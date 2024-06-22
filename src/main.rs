@@ -1,6 +1,7 @@
-pub(crate) mod commands;
+#![feature(read_buf)]
+pub mod commands;
 pub mod configuration;
-pub(crate) mod indicphone;
+pub mod indicphone;
 
 use clap::Parser;
 use clap::Subcommand;
@@ -25,10 +26,11 @@ enum Command {
     /// current version of the build.
     Version,
 
-    ///path to one or more config files (will be merged in order) (default [config.toml])
+    ///path to one or more config files (will be merged in order) (default [config.toml]) only 5 files for now.
     Config {
         #[clap(short, long, default_value = "config.toml")]
-        file: PathBuf,
+        #[arg(value_parser=clap::value_parser!(PathBuf) , num_args=1..6)]
+        files: Vec<PathBuf>,
     },
 
     /// Run first time DB installation
@@ -57,7 +59,7 @@ fn main() -> std::io::Result<()> {
     let args = Args::parse();
     match args.command {
         Command::Import => {}
-        Command::Config { file } => commands::config::invoke(file),
+        Command::Config { files } => commands::config::invoke(files),
         Command::Install => {
             println!("this is from install");
         }
