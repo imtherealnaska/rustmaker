@@ -1,4 +1,5 @@
 pub(crate) mod commands;
+pub mod configuration;
 pub(crate) mod indicphone;
 
 use clap::Parser;
@@ -40,10 +41,7 @@ enum Command {
     Site,
 
     /// Generate a new sample config.toml file.
-    NewConfig {
-        #[clap(short, long, default_value = "true")]
-        create: bool,
-    },
+    NewConfig,
 }
 
 struct Lang {
@@ -53,20 +51,9 @@ struct Lang {
     tokenizer_type: String,
     //    Tokenizer: data.Tokenizer,
 }
-
-struct Consts {
-    site: String,
-    root_url: String,
-    enable_submissions: bool,
-    enable_glossary: bool,
-    admin_username: Vec<u8>,
-    admin_password: Vec<u8>,
-}
-
 // need to set up log
-// need to use the config vars .
 
-fn main() -> anyhow::Result<()> {
+fn main() -> std::io::Result<()> {
     let args = Args::parse();
     match args.command {
         Command::Import => {}
@@ -80,8 +67,8 @@ fn main() -> anyhow::Result<()> {
         Command::Site => {
             println!("this is from site");
         }
-        Command::NewConfig { create } => {
-            commands::new_config::invoke(create);
+        Command::NewConfig {} => {
+            commands::new_config::invoke();
         }
         Command::Upgrade => todo!(),
         Command::Version => todo!(),

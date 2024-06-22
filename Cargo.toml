@@ -9,7 +9,8 @@ edition = "2021"
 anyhow = "1.0.86"
 clap = { version = "4.3.17", features = ["derive"] }
 config = "0.14.0"
-include_dir = "0.7.3"
+fake = "2.9.2"
 rand = "0.8.5"
 regex = "1.8.4"
+rust-embed = "8.4.0"
 serde = { version = "1.0.197", features = ["derive"] }

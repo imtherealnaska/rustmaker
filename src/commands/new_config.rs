@@ -1,50 +1,58 @@
 use core::panic;
-use include_dir::{include_dir, Dir};
-use rand::{self, random, thread_rng, Rng, RngCore};
+use rand::{self, distributions::Alphanumeric, thread_rng, Rng};
+use rust_embed::Embed;
 use std::fs;
 
-static PROJECT_DIR: Dir = include_dir!("./");
+#[derive(Embed)]
+#[folder = "deps/"]
+#[prefix = "deps/"]
+struct Asset;
 
-pub fn invoke(create: bool) {
-    if exists().is_ok() {
-        panic!("config.toml already exists. Remove it to create a new one");
-    } else {
-        println!("Creating a new config.toml file");
-        match generate_new_files() {
-            Ok(_) => println!("config.toml created successfully"),
-            Err(e) => panic!("Error creating config.toml file: {}", e),
+// this function should be called when the user runs the command `dictpress new-config`
+pub fn invoke() {
+    match exists() {
+        Ok(_) => {
+            panic!("config.toml file already exists. Delete it before creating a new one.");
         }
+        Err(_) => generate_new_files().expect("Generating config.toml file failed"),
     }
 }
 
 fn generate_new_files() -> std::io::Result<()> {
     // Get the sample config file. if not unwrap.
     // TODO: Need to handle this with better error handling.
-    let sample_config = PROJECT_DIR.get_file("config.sample.toml").unwrap();
+    // remove "dictpress_admin_password" and "dictpress_admin_username" from the new config file.
+    // let to = std::str::from_utf8(&data_cloned).unwrap();
+    // Oooh functionaaalllll
+    println!("Creating a new config.toml file");
+    let fake_password: String = thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(12)
+        .map(char::from)
+        .collect();
 
-    let mut data = [0u8; 12];
-    let mut data_cloned = data.clone();
-    rand::thread_rng().fill_bytes(&mut data);
+    // println!("to string is {}", fake_password);
+    let sample_config = Asset::get("deps/config.sample.toml").unwrap();
+    let new_config = sample_config.data.as_ref();
 
-    for (i, v) in data.iter().enumerate() {
-        let mut rng = thread_rng();
-        let random_number: u8 = rng.gen_range(0..=4);
-        if random_number == 1 {
-            data_cloned[i].make_ascii_uppercase();
-        }
-    }
+    let new_config =
+        std::str::from_utf8(new_config).expect("issue with converting types from u8 to str");
 
-    //remove "dictpress_admin_password" and "dictpress_admin_username" from the new config file.
-    let to = std::str::from_utf8(&data_cloned).unwrap();
-    let new_config = fs::read_to_string("config.sample.toml")?;
-    let new_config = new_config.replace("dictpress_admin_password", to);
+    let replaced_file_contents = new_config.replace("dictpress_admin_password", &fake_password);
 
-    fs::write("config.toml", new_config)?;
+    fs::write("config.toml", replaced_file_contents)?;
 
     Ok(())
 }
 
 fn exists() -> std::io::Result<()> {
     let attr = fs::metadata("config.toml")?;
-    Ok(())
+    if attr.is_file() {
+        Ok(())
+    } else {
+        Err(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "config.toml not found",
+        ))
+    }
 }
