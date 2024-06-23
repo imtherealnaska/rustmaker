@@ -57,14 +57,14 @@ struct Lang {
 // need to set up log
 
 fn main() -> std::io::Result<()> {
-    let db_settings = get_configuration().expect("msg");
-    println!("{:?}", db_settings.db.host);
+    let toml_settings = get_configuration().expect("msg");
+
     let args = Args::parse();
     match args.command {
         Command::Import => {}
         Command::Config { files } => commands::config::invoke(files),
         Command::Install => {
-            println!("this is from install");
+            commands::install::invoke(toml_settings.db);
         }
         Command::Yes => {
             println!("this is from yes");

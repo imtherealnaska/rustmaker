@@ -6,7 +6,7 @@ use std::fs;
 #[derive(Embed)]
 #[folder = "deps/"]
 #[prefix = "deps/"]
-struct Asset;
+pub struct Asset;
 
 // this function should be called when the user runs the command `dictpress new-config`
 pub fn invoke() {
