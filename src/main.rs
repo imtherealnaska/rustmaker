@@ -5,6 +5,7 @@ pub mod indicphone;
 
 use clap::Parser;
 use clap::Subcommand;
+use configuration::get_configuration;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
@@ -21,7 +22,7 @@ enum Command {
     Import,
 
     ///upgrade database to the current version
-    Upgrade,
+    Upgrade {},
 
     /// current version of the build.
     Version,
@@ -56,6 +57,8 @@ struct Lang {
 // need to set up log
 
 fn main() -> std::io::Result<()> {
+    let db_settings = get_configuration().expect("msg");
+    println!("{:?}", db_settings.db.host);
     let args = Args::parse();
     match args.command {
         Command::Import => {}
@@ -72,7 +75,7 @@ fn main() -> std::io::Result<()> {
         Command::NewConfig {} => {
             commands::new_config::invoke();
         }
-        Command::Upgrade => todo!(),
+        Command::Upgrade {} => commands::upgrade::invoke(),
         Command::Version => todo!(),
     }
     Ok(())

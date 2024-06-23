@@ -1,12 +1,83 @@
+use std::collections::HashMap;
+
+use config::ConfigError;
+
+#[derive(serde::Deserialize, Debug)]
+pub struct ConfigSettings {
+    pub app: AppSettings,
+    pub results: ResultSettings,
+    pub glossary: GlossarySettings,
+    pub db: DBSettings,
+    pub lang: LangSettings,
+}
+
+#[derive(serde::Deserialize, Debug)]
+pub struct AppSettings {
+    pub address: String,
+    pub admin_username: String,
+    pub admin_password: String,
+    pub admin_assets: Vec<String>,
+    pub root_url: String,
+    pub enable_submissions: bool,
+    pub enable_pages: bool,
+    pub dicts: Vec<Vec<String>>,
+}
+
+#[derive(serde::Deserialize, Debug)]
+pub struct ResultSettings {
+    pub default_per_page: u8,
+    pub max_per_page: u8,
+    pub num_page_nums: u8,
+}
+
+#[derive(serde::Deserialize, Debug)]
+pub struct GlossarySettings {
+    pub enabled: bool,
+    pub default_per_page: u8,
+    pub max_per_page: u8,
+    pub num_page_nums: u8,
+}
+
+#[derive(serde::Deserialize, Debug)]
+pub struct LangSettings {
+    pub name: Option<String>,
+    pub tokenizer: Option<String>,
+    pub tokenizer_type: Option<String>,
+    pub types: Option<HashMap<String, String>>,
+}
+
+#[derive(serde::Deserialize, Debug)]
+pub struct LangTypes {
+    pub noun: String,
+    pub adj: String,
+    pub verb: String,
+    pub adv: String,
+    pub conj: String,
+}
+
 #[derive(serde::Deserialize)]
 pub struct Consts {
-    site: String,
-    root_url: String,
-    enable_submissions: bool,
-    enable_glossary: bool,
-    admin_username: Vec<u8>,
-    admin_password: Vec<u8>,
+    pub site: String,
+    pub root_url: String,
+    pub enable_submissions: bool,
+    pub enable_glossary: bool,
+    pub admin_username: Vec<u8>,
+    pub admin_password: Vec<u8>,
 }
+
+#[derive(serde::Deserialize, Debug)]
+pub struct DBSettings {
+    pub host: String,
+    pub port: u32,
+    pub db: String,
+    pub user: String,
+    pub password: String,
+}
+
+// #[derive(serde::Deserialize)]
+// struct Config {
+//     lang: HashMap<String, LangSettings>,
+// }
 
 impl Consts {
     fn new() -> Consts {
@@ -21,7 +92,12 @@ impl Consts {
     }
 }
 
-pub fn get_configuration() -> Result<Consts, config::ConfigError> {
-    let cur_dir = std::env::current_dir().expect("Could not find current directory");
-    todo!()
+pub fn get_configuration() -> Result<ConfigSettings, ConfigError> {
+    let directory = std::env::current_dir().expect("Failed to get cwd");
+    println!("Current directory: {:?}", directory);
+    let settings = config::Config::builder()
+        .add_source(config::File::from(directory.join("config.toml")))
+        .build()?;
+
+    settings.try_deserialize::<ConfigSettings>()
 }
