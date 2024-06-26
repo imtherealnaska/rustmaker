@@ -69,14 +69,23 @@ pub struct Consts {
 pub struct DBSettings {
     pub host: String,
     pub port: u32,
-    pub db: String,
+    pub dbname: String,
     pub user: String,
     pub password: String,
 }
 
-// #[derive(serde::Deserialize)]
-// struct Config {
-//     lang: HashMap<String, LangSettings>,
+// impl DBSettings {
+//     pub fn without_db(&self) -> PgConnectOptions {
+//         SqliteConnectOptions::new()
+//             .host(&self.host)
+//             .username(&self.username)
+//             .password(self.password.expose_secret())
+//             .port(self.port)
+//     }
+
+//     pub fn with_db(&self) -> PgConnectOptions {
+//         self.without_db().database(&self.database_name)
+//     }
 // }
 
 impl Consts {

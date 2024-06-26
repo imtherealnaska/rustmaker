@@ -56,7 +56,7 @@ num_page_nums = 10
 [db]
 host = "localhost"
 port = 5432
-db = "dbname"
+dbname = "dbname"
 user = "username"
 password = "password"
 
