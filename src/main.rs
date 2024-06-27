@@ -2,6 +2,7 @@ pub mod commands;
 pub mod configuration;
 pub mod indicphone;
 pub mod startup;
+pub mod telemetry;
 
 use std::path::PathBuf;
 

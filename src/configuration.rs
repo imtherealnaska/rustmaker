@@ -103,7 +103,6 @@ impl Consts {
 
 pub fn get_configuration() -> Result<ConfigSettings, ConfigError> {
     let directory = std::env::current_dir().expect("Failed to get cwd");
-    println!("Current directory: {:?}", directory);
     let settings = config::Config::builder()
         .add_source(config::File::from(directory.join("config.toml")))
         .build()?;
