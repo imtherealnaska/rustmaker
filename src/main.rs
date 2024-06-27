@@ -1,4 +1,3 @@
-#![feature(read_buf)]
 pub mod commands;
 pub mod configuration;
 pub mod indicphone;
@@ -21,29 +20,22 @@ struct Args {
 enum Command {
     /// Import a CSV file into the database. eg --import /path/to/file.csv
     Import,
-
     ///upgrade database to the current version
     Upgrade {},
-
     /// current version of the build.
     Version,
-
     ///path to one or more config files (will be merged in order) (default [config.toml]) only 5 files for now.
     Config {
         #[clap(short, long, default_value = "config.toml")]
         #[arg(value_parser=clap::value_parser!(PathBuf) , num_args=1..6)]
         files: Vec<PathBuf>,
     },
-
     /// Run first time DB installation
     Install,
-
     /// Assume 'yes' to prompts during --install/upgrade
     Yes,
-
     /// Path to a site theme. If left empty, only HTTP APIs will be available
     Site,
-
     /// Generate a new sample config.toml file.
     NewConfig,
 }
@@ -61,7 +53,7 @@ async fn main() -> std::io::Result<()> {
         Command::Import => {}
         Command::Config { files } => commands::config::invoke(files),
         Command::Install => {
-            commands::install::invoke(database_settings, db_handle);
+            commands::install::invoke(database_settings, db_handle).await;
         }
         Command::Yes => {
             println!("this is from yes");

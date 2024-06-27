@@ -2,3 +2,5 @@
 /target
 dbname
 ex1
+*shm
+*wal
