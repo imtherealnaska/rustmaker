@@ -4,7 +4,7 @@ address = ":9000"
 
 # Admin dashboard and API credentials.
 admin_username = "dictpress"
-admin_password = "ZEh6tQXTi3BS"
+admin_password = "dGLsc6jDWxsU"
 
 # The website URL to be used on the frontend pages.
 # Example: yourdictionary.site.com
