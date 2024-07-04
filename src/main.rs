@@ -43,18 +43,12 @@ enum Command {
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
-    let toml_settings = get_configuration().expect("msg");
-    let database_settings = toml_settings.db;
-
-    // create db_handle >>> there should be a better way to do this
-    let db_handle = startup::run(&database_settings).await.unwrap();
-
     let args = Args::parse();
     match args.command {
         Command::Import => {}
         Command::Config { files } => commands::config::invoke(files),
         Command::Install => {
-            commands::install::invoke(database_settings, db_handle).await;
+            commands::install::invoke().await;
         }
         Command::Yes => {
             println!("this is from yes");

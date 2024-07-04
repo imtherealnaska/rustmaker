@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n        INSERT INTO settings (key, value) VALUES ('migrations', json(?))\n        ON CONFLICT (key) DO UPDATE SET value = json(value || json(?))\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "353dfcdd4c7aec262df8075db55605e3e1d6b5f340e2ee0544846497e970504a"
+}
