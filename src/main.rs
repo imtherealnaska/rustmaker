@@ -8,7 +8,6 @@ use std::path::PathBuf;
 
 use clap::Parser;
 use clap::Subcommand;
-use configuration::get_configuration;
 
 #[derive(Debug, Parser)]
 #[command(version , about , long_about=None)]
