@@ -4,4 +4,4 @@
 
 #### Why? :
 - To learn rust better and also to understand a very cool opensource project .
-- To share my learnings through my blog while doing so here [rabbitholes](rabbitholes.in).
+- To share my learnings through my blog while doing so here [rabbitholes](https://rabbitholes.in/blog/).
