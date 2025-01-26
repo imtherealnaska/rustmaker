@@ -42,27 +42,27 @@ pub async fn invoke() {
         .await
         .expect("issue with exec");
 
-    println!("hurray something happened ??? {:?}", result);
-    // hard coding for now
-    let ver = String::from("v2.0.0");
-    match record_migration_version(ver, &db_handle).await {
-        Ok(_) => println!("ok"),
-        Err(_) => println!("eerr"),
-    }
+    // println!("hurray something happened ??? {:?}", result);
+    // // hard coding for now
+    // let ver = String::from("v2.0.0");
+    // match record_migration_version(ver, &db_handle).await {
+    //     Ok(_) => println!("ok"),
+    //     Err(_) => println!("eerr"),
+    // }
 }
 
 // remember to pass a ref and not consume pool , or bad things happen
-async fn record_migration_version(ver: String, db: &Pool<Sqlite>) -> Result<(), sqlx::Error> {
-    sqlx::query!(
-        r#"
-        INSERT INTO settings (key, value) VALUES ('migrations', json(?))
-        ON CONFLICT (key) DO UPDATE SET value = json(value || json(?))
-        "#,
-        ver,
-        ver
-    )
-    .execute(db)
-    .await?;
+// async fn record_migration_version(ver: String, db: &Pool<Sqlite>) -> Result<(), sqlx::Error> {
+//     sqlx::query!(
+//         r#"
+//         INSERT INTO settings (key, value) VALUES ('migrations', json(?))
+//         ON CONFLICT (key) DO UPDATE SET value = json(value || json(?))
+//         "#,
+//         ver,
+//         ver
+//     )
+//     .execute(db)
+//     .await?;
 
-    Ok(())
-}
+//     Ok(())
+// }
