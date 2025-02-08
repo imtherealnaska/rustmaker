@@ -6,9 +6,7 @@ pub mod telemetry;
 
 use std::path::PathBuf;
 
-use clap::Parser;
-use clap::Subcommand;
-use configuration::get_configuration;
+use clap::{Parser, Subcommand};
 
 #[derive(Debug, Parser)]
 #[command(version , about , long_about=None)]
@@ -19,7 +17,7 @@ struct Args {
 
 #[derive(Debug, Subcommand)]
 enum Command {
-    /// Import a CSV file into the database. eg --import /path/to/file.csv
+    /// Import a CSV file into the database. eg bin import /path/to/file.csv
     Import,
     ///upgrade database to the current version
     Upgrade {},
@@ -44,11 +42,16 @@ enum Command {
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     let args = Args::parse();
+
+    let db = commands::init::get_db_handle()
+        .await
+        .expect("Failed to get db handle");
+
     match args.command {
         Command::Import => {}
         Command::Config { files } => commands::config::invoke(files),
         Command::Install => {
-            commands::install::invoke().await;
+            commands::install::invoke(db).await;
         }
         Command::Yes => {
             println!("this is from yes");
@@ -59,7 +62,7 @@ async fn main() -> std::io::Result<()> {
         Command::NewConfig {} => {
             commands::new_config::invoke();
         }
-        Command::Upgrade {} => commands::upgrade::invoke(),
+        Command::Upgrade {} => commands::upgrade::upgrade(&db.0).await.expect("Failed"),
         Command::Version => todo!(),
     }
     Ok(())

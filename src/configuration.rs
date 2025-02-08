@@ -91,8 +91,8 @@ pub struct DBSettings {
 impl Consts {
     fn new() -> Consts {
         Self {
-            site: todo!(),
-            root_url: todo!(),
+            site: "".to_string(),
+            root_url: "/".to_string(),
             enable_submissions: todo!(),
             enable_glossary: todo!(),
             admin_username: todo!(),
