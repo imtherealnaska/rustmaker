@@ -23,7 +23,6 @@ fn generate_new_files() -> std::io::Result<()> {
     // TODO: Need to handle this with better error handling.
     // remove "dictpress_admin_password" and "dictpress_admin_username" from the new config file.
     // let to = std::str::from_utf8(&data_cloned).unwrap();
-    // Oooh functionaaalllll
     println!("Creating a new config.toml file");
     let fake_password: String = thread_rng()
         .sample_iter(&Alphanumeric)
